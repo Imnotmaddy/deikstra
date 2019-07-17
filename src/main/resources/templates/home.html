@@ -5,40 +5,81 @@
         table, th, td {
             border: 1px solid black;
         }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+        .grid-container > div {
+            text-align: left;
+            padding: 20px 0;
+            font-size: 20px;
+        }
+
+        .item1 {
+            grid-column: 1 / span 1;
+        }
     </style>
 
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
-<form action="#" th:action="@{/createCity}" th:object="${routeDto}" method="post">
-    <h1>Create route</h1>
-    <p>City A: <input type="text" minlength="3" th:field="*{cityA}"/></p>
-    <p>City B: <input type="text" minlength="3" th:field="*{cityB}"/></p>
-    <p>Distance: <input type="number" step="0.01" th:min="0" th:field="*{distance}"/></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
+<div class="grid-container">
+    <div class="item1">
+        <form action="#" th:action="@{/createRoute}" th:object="${routeDto}" method="post" id="createRouteForm">
+            <h1>Create route</h1>
+            <p><label> City A:
+                <input type="text" minlength="3" th:field="*{cityA}"/>
+            </label></p>
+            <p><label>City B:
+                <input type="text" minlength="3" th:field="*{cityB}"/>
+            </label></p>
+            <p><label>
+                Distance:
+                <input type="number" step="0.01" th:min="0" th:field="*{distance}"/>
+            </label></p>
+            <p><input type="submit" form="createRouteForm"/></p>
+        </form>
 
-<div th:switch="${routes}">
-    <h2 th:case="null">No cities yet!</h2>
-    <div th:case="*">
-        <h2>City Routes</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Distance</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="route : ${routes}">
-                <td th:text="${route.cityA}"></td>
-                <td th:text="${route.cityB}"></td>
-                <td th:text="${route.distance}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div th:switch="${routes}">
+            <h2 th:case="null">No cities yet!</h2>
+            <div th:case="*">
+                <h2>City Routes</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Distance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="route : ${routes}">
+                        <td th:text="${route.cityA}"></td>
+                        <td th:text="${route.cityB}"></td>
+                        <td th:text="${route.distance}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="item2">
+        <form action="#" th:action="@{/calculateRoute}" method="post" id="calculateRouteForm" th:object="${routeDto}">
+            <h1>Calculate route</h1>
+            <p><label> City A:
+                <input type="text" minlength="3" th:field="*{cityA}"/>
+            </label></p>
+            <p><label>City B:
+                <input type="text" minlength="3"  th:field="*{cityB}" />
+            </label></p>
+
+            <button type="submit" form="calculateRouteForm">Calculate route</button>
+        </form>
     </div>
 </div>
 </body>

@@ -18,16 +18,22 @@ public class CityController {
     private final RouteService routeService;
 
     @GetMapping("/")
-    public String greetingForm(Model model) {
+    public String showHomeView(Model model) {
         model.addAttribute("routeDto", new RouteDto());
         model.addAttribute("routes", routeService.findAll());
         return "home";
     }
 
-    @PostMapping("/createCity")
-    public String greetingSubmit(@ModelAttribute @Valid RouteDto routeDto, Model model) {
+    @PostMapping("/createRoute")
+    public String createRoute(@ModelAttribute @Valid RouteDto routeDto, Model model) {
         routeService.save(routeDto);
         model.addAttribute("routes", routeService.findAll());
+        return "redirect:/";
+    }
+
+    @PostMapping("/calculateRoute")
+    public String calculateRoute(@ModelAttribute RouteDto routeDto, Model model) {
+        model.addAttribute("calculatedRoute", routeService.calculateRoute(routeDto));
         return "redirect:/";
     }
 

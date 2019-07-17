@@ -7,6 +7,7 @@ import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,10 @@ public class RouteService {
 
     public List<RouteDto> findAll() {
         return routeTransformer.transform(routeRepository.findAll());
+    }
+
+    public List<RouteDto> calculateRoute(RouteDto routeDto){
+        return new ArrayList<>();
     }
 
 }
