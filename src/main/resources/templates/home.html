@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<form action="#" th:action="@{/createCity}" th:object="${routeDto}" method="post">
+    <h1>Create route</h1>
+    <p>City A: <input type="text" minlength="3" th:field="*{cityA}"/></p>
+    <p>City B: <input type="text" minlength="3" th:field="*{cityB}"/></p>
+    <p>Distance: <input type="number" step="0.01" th:min="0" th:field="*{distance}"/></p>
+    <p><input type="submit" value="Submit"/></p>
+</form>
+
+<div th:switch="${routes}">
+    <h2 th:case="null">No cities yet!</h2>
+    <div th:case="*">
+        <h2>City Routes</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Distance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="route : ${routes}">
+                <td th:text="${route.cityA}"></td>
+                <td th:text="${route.cityB}"></td>
+                <td th:text="${route.distance}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
