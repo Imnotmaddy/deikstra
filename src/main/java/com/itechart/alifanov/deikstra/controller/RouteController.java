@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
-public class CityController {
+public class RouteController {
 
     private final RouteService routeService;
 

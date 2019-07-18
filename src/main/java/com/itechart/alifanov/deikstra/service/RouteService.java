@@ -6,6 +6,7 @@ import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,18 +17,31 @@ public class RouteService {
     private final RouteRepository routeRepository;
     private final RouteTransformer routeTransformer;
 
+    @Transactional
     public RouteDto save(final RouteDto routeDto) {
-        final Route route = routeTransformer.transform(routeDto);
-        routeRepository.save(route);
-        return routeTransformer.transform(route);
+        final Route newRoute = routeTransformer.transform(routeDto);
+        Route oldRoute = ifPresent(newRoute.getCityA(), newRoute.getCityB());
+        if (oldRoute == null) {
+            routeRepository.save(newRoute);
+            return routeTransformer.transform(newRoute);
+        } else {
+            oldRoute.setDistance(newRoute.getDistance());
+            routeRepository.save(oldRoute);
+            return routeTransformer.transform(oldRoute);
+        }
     }
 
     public List<RouteDto> findAll() {
         return routeTransformer.transform(routeRepository.findAll());
     }
 
-    public List<RouteDto> calculateRoute(RouteDto routeDto){
+    public List<RouteDto> calculateRoute(RouteDto routeDto) {
+
         return new ArrayList<>();
+    }
+
+    private Route ifPresent(String cityA, String cityB) {
+        return routeRepository.findByCityAAndCityB(cityA, cityB);
     }
 
 }
