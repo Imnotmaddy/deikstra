@@ -26,14 +26,24 @@ public class RouteTransformer {
                 .build();
     }
 
-    public List<RouteDto> transform(List<Route> cities) {
+
+    public List<RouteDto> transformListToDto(List<Route> routes) {
         List<RouteDto> routeDtos = new ArrayList<>();
-        if (cities != null) {
-            for (Route route : cities) {
+        if (routes != null) {
+            for (Route route : routes) {
                 routeDtos.add(transform(route));
             }
-            return routeDtos;
         }
         return routeDtos;
+    }
+
+    public List<Route> transformListToRoute(List<RouteDto> routeDtos) {
+        List<Route> routes = new ArrayList<>();
+        if (routeDtos != null) {
+            for (RouteDto routeDto : routeDtos) {
+                routes.add(transform(routeDto));
+            }
+        }
+        return routes;
     }
 }
