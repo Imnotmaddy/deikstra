@@ -33,7 +33,7 @@ public class RouteController {
 
     @PostMapping("/calculateRoute")
     public String calculateRoute(@ModelAttribute RouteDto routeDto, Model model) {
-        model.addAttribute("calculatedRoute", routeService.calculateRoute(routeDto));
+        model.addAttribute("calculatedRoute", routeService.calculateRoute(routeDto.getCityA(), routeDto.getCityB()));
         return "redirect:/";
     }
 
