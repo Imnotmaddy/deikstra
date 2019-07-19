@@ -5,6 +5,7 @@ import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import com.itechart.alifanov.deikstra.service.search.ShortestPathFinder;
+import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +37,10 @@ public class RouteService {
         return routeTransformer.transformListToDto(routeRepository.findAll());
     }
 
-    public List<RouteDto> calculateRoute(String fromCity, String toCity) {
+    public Pair<List<String>, Double> calculateRoute(String fromCity, String toCity) {
         final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-
-        pathFinder.findShortestPath(routeMap, fromCity, toCity);
-        //mapToDtoBuilder
-        return new ArrayList<>();
+        return pathFinder.findShortestPath(routeMap, fromCity, toCity);
     }
 
     private Route ifPresent(Route route) {

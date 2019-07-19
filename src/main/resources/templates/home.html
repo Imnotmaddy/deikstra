@@ -75,11 +75,16 @@
                 <input type="text" minlength="3" th:field="*{cityA}"/>
             </label></p>
             <p><label>City B:
-                <input type="text" minlength="3"  th:field="*{cityB}" />
+                <input type="text" minlength="3" th:field="*{cityB}"/>
             </label></p>
 
             <button type="submit" form="calculateRouteForm">Calculate route</button>
         </form>
+        <h1 th:text="${distance}"></h1>
+        <tr th:each="node: ${path}">
+            <span th:text="${node}"/>
+        </tr>
+        <h1 th:if="${error != null}" th:text="${error}"></h1>
     </div>
 </div>
 </body>
