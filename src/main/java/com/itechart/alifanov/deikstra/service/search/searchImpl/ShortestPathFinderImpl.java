@@ -16,13 +16,11 @@ public class ShortestPathFinderImpl implements ShortestPathFinder {
         Set<Node> unsettledNodes = new HashSet<>();
 
         List<Node> nodes = buildNodes(map);
+
         Node startingNode = findStartingNode(nodes, fromCity);
         if (startingNode == null) return;
         startingNode.setDistance(0);
 
-        while (unsettledNodes.size() != 0) {
-
-        }
     }
 
     private Node findStartingNode(List<Node> nodes, String target) {
@@ -33,26 +31,34 @@ public class ShortestPathFinderImpl implements ShortestPathFinder {
         return null;
     }
 
+
     private List<Node> buildNodes(Map<String, Map<String, Double>> map) {
-        List<Node> nodes = new LinkedList<>();
+        Map<String, Node> createdNodes = new HashMap<>();
         for (Map.Entry<String, Map<String, Double>> entry : map.entrySet()) {
             String city = entry.getKey();
             Map<String, Double> neighbours = entry.getValue();
+            Map<Node, Double> nodeNeighbours = new LinkedHashMap<>();
 
+            neighbours.forEach((neighbourCity, distance) -> {
+                Node currentNeighbour;
+                if (createdNodes.containsKey(neighbourCity)) {
+                    currentNeighbour = createdNodes.get(neighbourCity);
+                } else {
+                    currentNeighbour = new Node(neighbourCity, null);
+                }
+                nodeNeighbours.put(currentNeighbour, distance);
+                createdNodes.put(neighbourCity, currentNeighbour);
+            });
 
+            Node node;
+            if (createdNodes.containsKey(city)) {
+                node = createdNodes.get(city);
+                node.setNeighbours(nodeNeighbours);
+            } else {
+                node = new Node(city, nodeNeighbours);
+            }
+            createdNodes.put(city, node);
         }
-        return nodes;
-    }
-
-    private List<Node> buildNeighbours(Map<String, Double> map){
-
-    }
-
-    private Node exists(String name, List<Node> nodes) {
-        for (Node node : nodes) {
-            if (node.getName().equals(name))
-                return node;
-        }
-        return null;
+        return new LinkedList<>(createdNodes.values());
     }
 }
