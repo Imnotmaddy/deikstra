@@ -80,10 +80,6 @@
 
             <button type="submit" form="calculateRouteForm">Calculate route</button>
         </form>
-        <h1 th:text="${distance}"></h1>
-        <tr th:each="node: ${path}">
-            <span th:text="${node}"/>
-        </tr>
         <h1 th:if="${error != null}" th:text="${error}"></h1>
     </div>
 </div>

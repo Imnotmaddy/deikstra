@@ -7,17 +7,24 @@ import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import com.itechart.alifanov.deikstra.service.search.ShortestPathFinder;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class RouteService {
+    @Autowired
     private final RouteRepository routeRepository;
+    @Autowired
     private final RouteTransformer routeTransformer;
-    private final ShortestPathFinder pathFinder;
+
+    @Autowired
+    private final ShortestPathFinder shortestPathFinder;
 
     @Transactional
     public RouteDto save(final RouteDto routeDto) {
@@ -40,8 +47,15 @@ public class RouteService {
     public Pair<List<String>, Double> calculateRoute(String fromCity, String toCity) {
         final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-        return pathFinder.findShortestPath(routeMap, fromCity, toCity);
+        return shortestPathFinder.findShortestPath(routeMap, fromCity, toCity);
     }
+
+    public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) {
+        final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
+        final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
+        return shortestPathFinder.findAllPaths(routeMap, fromCity, toCity);
+    }
+
 
     private Route ifPresent(Route route) {
         Route existingRoute = routeRepository.findByCityAAndCityB(route.getCityA(), route.getCityB());

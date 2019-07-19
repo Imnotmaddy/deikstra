@@ -4,6 +4,7 @@ import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteController {
 
+    @Autowired
     private final RouteService routeService;
 
     @GetMapping("/")
@@ -35,13 +37,9 @@ public class RouteController {
 
     @PostMapping("/calculateRoute")
     public String calculateRoute(@ModelAttribute RouteDto routeDto, Model model) {
-        final Pair<List<String>, Double> path = routeService.calculateRoute(routeDto.getCityA(), routeDto.getCityB());
-        if (path != null) {
-            model.addAttribute("path", path.getKey());
-            model.addAttribute("distance", path.getValue());
-        } else {
+        final List<Pair<List<String>, Double>> pairs = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
+        if (pairs == null)
             model.addAttribute("error", "No connection between cities");
-        }
         model.addAttribute("routeDto", new RouteDto());
         model.addAttribute("routes", routeService.findAll());
         return "home";

@@ -3,21 +3,26 @@ package com.itechart.alifanov.deikstra.service.search.searchImpl;
 import com.itechart.alifanov.deikstra.model.Node;
 import com.itechart.alifanov.deikstra.service.search.ShortestPathFinder;
 import javafx.util.Pair;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ShortestPathFinderImpl implements ShortestPathFinder {
+
+    private List<Pair<List<Node>, Double>> allPaths = new LinkedList<>();
+
     @Override
     public Pair<List<String>, Double> findShortestPath(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
 
-        Set<Node> settledNodes = new HashSet<>();
-        Set<Node> unsettledNodes = new HashSet<>();
-
+        List<Node> settledNodes = new LinkedList<>();
+        List<Node> unsettledNodes = new LinkedList<>();
         List<Node> nodes = buildNodes(map);
 
-        Node startingNode = findStartingNode(nodes, fromCity);
+        Node startingNode = findNode(nodes, fromCity);
         if (startingNode == null) return null;
         startingNode.setDistance((double) 0);
         unsettledNodes.add(startingNode);
@@ -38,11 +43,60 @@ public class ShortestPathFinderImpl implements ShortestPathFinder {
             settledNodes.add(currentNode);
         }
 
-        return buildResult(toCity,settledNodes);
+        return buildResult(toCity, settledNodes);
     }
 
-    private Pair<List<String>, Double> buildResult(String toCity, Set<Node> nodes) {
-        Node node = findNode(toCity, nodes);
+    @Override
+    public List<Pair<List<String>, Double>> findAllPaths(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
+        List<Node> nodes = buildNodes(map);
+        Node startingNode = findNode(nodes, fromCity);
+        Node endingNode = findNode(nodes, toCity);
+        if (startingNode == null || endingNode == null) return null;
+
+        List<Node> areVisited = new LinkedList<>();
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(startingNode);
+        recursive(startingNode, endingNode, areVisited, queue, (double) 0);
+        return buildResult(this.allPaths);
+    }
+
+    private List<Pair<List<String>, Double>> buildResult(List<Pair<List<Node>, Double>> source) {
+        if (source.isEmpty()) return null;
+        List<Pair<List<String>, Double>> result = new LinkedList<>();
+        for (Pair<List<Node>, Double> value : source) {
+            List<String> innerList = new LinkedList<>();
+            for (Node node : value.getKey()) {
+                innerList.add(node.getName());
+            }
+            result.add(new Pair<>(innerList, value.getValue()));
+        }
+        return result;
+    }
+
+
+    private void recursive(Node currentNode, Node targetNode, List<Node> areVisited, List<Node> currentPath, Double distance) {
+        areVisited.add(currentNode);
+        if (currentNode == targetNode) {
+            areVisited.remove(currentNode);
+            allPaths.add(new Pair<>(new ArrayList<>(currentPath), distance));
+            return;
+        }
+        for (Map.Entry<Node, Double> entry : currentNode.getNeighbours().entrySet()) {
+            Node evaluatedNeighbour = entry.getKey();
+            if (!areVisited.contains(evaluatedNeighbour)) {
+                currentPath.add(evaluatedNeighbour);
+                distance += entry.getValue();
+                recursive(evaluatedNeighbour, targetNode, areVisited, currentPath, distance);
+                currentPath.remove(evaluatedNeighbour);
+                distance = (double) 0;
+            }
+        }
+        areVisited.remove(currentNode);
+    }
+
+
+    private Pair<List<String>, Double> buildResult(String toCity, List<Node> nodes) {
+        Node node = findNode(nodes, toCity);
         if (node == null) return null;
         List<String> path = new LinkedList<>();
         for (Node pathNodes : node.getShortestPath()) {
@@ -52,15 +106,7 @@ public class ShortestPathFinderImpl implements ShortestPathFinder {
         return new Pair<>(path, node.getDistance());
     }
 
-    private Node findNode(String target, Set<Node> nodes) {
-        for (Node node : nodes) {
-            if (node.getName().equals(target))
-                return node;
-        }
-        return null;
-    }
-
-    private Node getLowestDistanceNode(Set<Node> unsettledNodes) {
+    private Node getLowestDistanceNode(List<Node> unsettledNodes) {
         Node lowestDistanceNode = null;
         double lowestDistance = Double.MAX_VALUE;
 
@@ -83,14 +129,13 @@ public class ShortestPathFinderImpl implements ShortestPathFinder {
         }
     }
 
-    private Node findStartingNode(List<Node> nodes, String target) {
+    private Node findNode(List<Node> nodes, String target) {
         for (Node node : nodes) {
             if (node.getName().equals(target))
                 return node;
         }
         return null;
     }
-
 
     private List<Node> buildNodes(Map<String, Map<String, Double>> map) {
         Map<String, Node> createdNodes = new HashMap<>();
