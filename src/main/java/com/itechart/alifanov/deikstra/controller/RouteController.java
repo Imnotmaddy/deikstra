@@ -37,8 +37,8 @@ public class RouteController {
 
     @PostMapping("/calculateRoute")
     public String calculateRoute(@ModelAttribute RouteDto routeDto, Model model) {
-        final List<Pair<List<String>, Double>> pairs = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
-        if (pairs == null)
+        final List<Pair<List<String>, Double>> routes = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
+        if (routes == null)
             model.addAttribute("error", "No connection between cities");
         model.addAttribute("routeDto", new RouteDto());
         model.addAttribute("routes", routeService.findAll());

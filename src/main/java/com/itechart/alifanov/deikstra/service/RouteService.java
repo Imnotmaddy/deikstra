@@ -4,10 +4,9 @@ import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
-import com.itechart.alifanov.deikstra.service.search.ShortestPathFinder;
+import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +17,10 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RouteService {
-    @Autowired
-    private final RouteRepository routeRepository;
-    @Autowired
-    private final RouteTransformer routeTransformer;
 
-    @Autowired
-    private final ShortestPathFinder shortestPathFinder;
+    private final RouteRepository routeRepository;
+    private final RouteTransformer routeTransformer;
+    private final PathFinder pathFinder;
 
     @Transactional
     public RouteDto save(final RouteDto routeDto) {
@@ -41,19 +37,23 @@ public class RouteService {
     }
 
     public List<RouteDto> findAll() {
-        return routeTransformer.transformListToDto(routeRepository.findAll());
+        return routeTransformer.transformListToDto(findAllStoredRoutes());
     }
 
-    public Pair<List<String>, Double> calculateRoute(String fromCity, String toCity) {
+    private List<Route> findAllStoredRoutes() {
+        return routeRepository.findAll();
+    }
+
+    public Pair<List<String>, Double> calculateShortestRoute(String fromCity, String toCity) {
         final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-        return shortestPathFinder.findShortestPath(routeMap, fromCity, toCity);
+        return pathFinder.findShortestPath(routeMap, fromCity, toCity);
     }
 
     public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) {
-        final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
+        final List<Route> routes = this.findAllStoredRoutes();
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-        return shortestPathFinder.findAllPaths(routeMap, fromCity, toCity);
+        return pathFinder.findAllPaths(routeMap, fromCity, toCity);
     }
 
 
