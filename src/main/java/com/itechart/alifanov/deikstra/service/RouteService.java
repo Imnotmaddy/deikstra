@@ -40,7 +40,7 @@ public class RouteService {
         return routeTransformer.transformListToDto(findAllStoredRoutes());
     }
 
-    private List<Route> findAllStoredRoutes() {
+    public List<Route> findAllStoredRoutes() {
         return routeRepository.findAll();
     }
 

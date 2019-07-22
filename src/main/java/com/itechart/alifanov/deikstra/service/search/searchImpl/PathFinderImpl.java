@@ -2,9 +2,6 @@ package com.itechart.alifanov.deikstra.service.search.searchImpl;
 
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import javafx.util.Pair;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -16,24 +13,6 @@ import java.util.*;
 public class PathFinderImpl implements PathFinder {
 
     private List<Pair<List<Node>, Double>> allPaths = new LinkedList<>();
-
-    @Getter
-    @Setter
-    @RequiredArgsConstructor
-    private class Node {
-        final private String name;
-
-        private Double distance = Double.MAX_VALUE;
-
-        private Map<Node, Double> neighbours = new LinkedHashMap<>();
-
-        private List<Node> shortestPath = new LinkedList<>();
-
-        Node(String name, Map<Node, Double> neighbours) {
-            this.name = name;
-            this.neighbours = neighbours;
-        }
-    }
 
     @Override
     public Pair<List<String>, Double> findShortestPath(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
@@ -108,7 +87,7 @@ public class PathFinderImpl implements PathFinder {
                 distance += entry.getValue();
                 recursive(evaluatedNeighbour, targetNode, areVisited, currentPath, distance);
                 currentPath.remove(evaluatedNeighbour);
-                distance-=entry.getValue();
+                distance -= entry.getValue();
             }
         }
         areVisited.remove(currentNode);

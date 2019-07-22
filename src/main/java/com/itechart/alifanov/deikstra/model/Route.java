@@ -32,4 +32,12 @@ public class Route {
     @NotNull
     private Double distance;
 
+    @Version
+    private long version;
+
+    public Route(@NotBlank String cityA, @NotBlank String cityB, @NotNull Double distance) {
+        this.cityA = cityA;
+        this.cityB = cityB;
+        this.distance = distance;
+    }
 }

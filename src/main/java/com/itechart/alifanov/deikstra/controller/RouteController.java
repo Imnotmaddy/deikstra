@@ -4,7 +4,6 @@ import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteController {
 
-    @Autowired
     private final RouteService routeService;
 
     @GetMapping("/")
