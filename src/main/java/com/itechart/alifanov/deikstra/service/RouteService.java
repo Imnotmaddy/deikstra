@@ -66,7 +66,7 @@ public class RouteService {
         return existingRoute;
     }
 
-    private Map<String, Map<String, Double>> buildMatrix(List<Route> routes) {
+    public Map<String, Map<String, Double>> buildMatrix(List<Route> routes) {
         LinkedHashMap<String, Map<String, Double>> map = new LinkedHashMap<>();
         for (Route route : routes) {
             String cityA = route.getCityA();

@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = DeikstraApplication.class)
 public class PathFinderTest {
 
+
     private RouteService routeService;
 
     @MockBean
@@ -75,56 +76,38 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRoute_7Cities_11Roads(){
+    public void testRoute_7Cities_11Roads() {
         //Given
-        RouteDto routeDto1 = new RouteDto("Tokyo", "AngelTown", (double) 1);
-        RouteDto routeDto2 = new RouteDto("Tokyo", "Berlin", (double) 2);
-        RouteDto routeDto3 = new RouteDto("Tokyo", "Moscow", (double) 3);
-        RouteDto routeDto4 = new RouteDto("AngelTown", "BrightTown", (double) 4);
-        RouteDto routeDto5 = new RouteDto("BrightTown", "Polotsk", (double) 5);
-        RouteDto routeDto10 = new RouteDto("BrightTown", "Moscow", (double) 11);
-        RouteDto routeDto6 = new RouteDto("Moscow", "Berlin", (double) 6);
-        RouteDto routeDto7 = new RouteDto("Moscow", "Minsk", (double) 7);
-        RouteDto routeDto8 = new RouteDto("Minsk", "Polotsk", (double) 8);
-        RouteDto routeDto9 = new RouteDto("Polotsk", "Moscow", (double) 9);
-        RouteDto routeDto0 = new RouteDto("Berlin", "Polotsk", (double) 10);
+        Route route1 = new Route("Tokyo", "AngelTown", (double) 1);
+        Route route2 = new Route("Tokyo", "Berlin", (double) 2);
+        Route route3 = new Route("Tokyo", "Moscow", (double) 3);
+        Route route4 = new Route("AngelTown", "BrightTown", (double) 4);
+        Route route5 = new Route("BrightTown", "Polotsk", (double) 5);
+        Route route10 = new Route("BrightTown", "Moscow", (double) 11);
+        Route route6 = new Route("Moscow", "Berlin", (double) 6);
+        Route route7 = new Route("Moscow", "Minsk", (double) 7);
+        Route route8 = new Route("Minsk", "Polotsk", (double) 8);
+        Route route9 = new Route("Polotsk", "Moscow", (double) 9);
+        Route route0 = new Route("Berlin", "Polotsk", (double) 10);
 
-        Map<String, Double> innerMapTokyo = new HashMap<>();
-        innerMapTokyo.put(routeDto1.getCityB(), routeDto1.getDistance());
-        innerMapTokyo.put(routeDto2.getCityB(), routeDto2.getDistance());
-        innerMapTokyo.put(routeDto3.getCityB(), routeDto3.getDistance());
+        List<Route> routes = new LinkedList<>();
+        routes.add(route0);routes.add(route1);routes.add(route2);routes.add(route3);
+        routes.add(route4);routes.add(route5);routes.add(route6);routes.add(route7);
+        routes.add(route8);routes.add(route9);routes.add(route10);
 
-        Map<String, Double> innerMapAngelTown = new HashMap<>();
-        innerMapAngelTown.put(routeDto4.getCityB(), routeDto4.getDistance());
+        Map<String, Map<String, Double>> outerMap = routeService.buildMatrix(routes);
 
-        Map<String, Double> innerMapBrightTown = new HashMap<>();
-        innerMapBrightTown.put(routeDto5.getCityB(), routeDto5.getDistance());
-        innerMapBrightTown.put(routeDto10.getCityB(), routeDto10.getDistance());
+        //When
+        final List<Pair<List<String>, Double>> pathsToBerlin = pathFinder.findAllPaths(outerMap, "Tokyo", "Berlin");
+        pathFinder = new PathFinderImpl();
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Polotsk");
+        pathFinder = new PathFinderImpl();
+        final List<Pair<List<String>, Double>> pathsToMinsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Minsk");
 
-        Map<String, Double> innerMapMoscow = new HashMap<>();
-        innerMapMoscow.put(routeDto7.getCityB(), routeDto7.getDistance());
-        innerMapMoscow.put(routeDto6.getCityB(), routeDto6.getDistance());
-
-        Map<String, Double> innerMapMinsk = new HashMap<>();
-        innerMapMinsk.put(routeDto8.getCityB(), routeDto8.getDistance());
-
-        Map<String, Double> innerMapPolotsk = new HashMap<>();
-        innerMapPolotsk.put(routeDto9.getCityB(), routeDto9.getDistance());
-
-        Map<String, Double> innerMapBerlin = new HashMap<>();
-        innerMapPolotsk.put(routeDto0.getCityB(), routeDto0.getDistance());
-
-        Map<String, Map<String, Double>> outerMap = new HashMap<>();
-        outerMap.put(routeDto1.getCityA(), innerMapTokyo);
-        outerMap.put(routeDto4.getCityA(), innerMapAngelTown);
-        outerMap.put(routeDto5.getCityA(), innerMapBrightTown);
-        outerMap.put(routeDto6.getCityA(), innerMapMoscow);
-        outerMap.put(routeDto8.getCityA(), innerMapMinsk);
-        outerMap.put(routeDto9.getCityA(), innerMapPolotsk);
-        outerMap.put(routeDto0.getCityA(), innerMapBerlin);
-
-        //List<String> expectedListResult = Arrays.asList(routeDto.getCityA(), "Polotsk");
-        //Pair<List<String>, Double> expectedResult = new Pair<>(expectedListResult, routeDto.getDistance());
+        //Then
+        assertThat(pathsToBerlin).hasSize(4);
+        assertThat(pathsToPolotsk).hasSize(6);
+        assertThat(pathsToMinsk).hasSize(4);
     }
 }
 
