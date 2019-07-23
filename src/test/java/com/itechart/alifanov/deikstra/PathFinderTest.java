@@ -155,6 +155,22 @@ public class PathFinderTest {
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
+
+    @Test
+    public void testRouteToMinsk(){
+        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow","Minsk"), (double) 26);
+        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow","Minsk"), (double) 10);
+        Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow", "Minsk"), (double) 28);
+        List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
+        expectedList.add(expectedPair1);
+        expectedList.add(expectedPair2);
+        expectedList.add(expectedPair3);
+
+        //When
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Minsk");
+        //Then
+        assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
+    }
 }
 
 
