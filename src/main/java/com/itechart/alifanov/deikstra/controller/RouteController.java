@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,7 +29,14 @@ public class RouteController {
 
     @PostMapping("/createRoute")
     public String createRoute(@ModelAttribute @Valid RouteDto routeDto, Model model) {
-        routeService.save(routeDto);
+        try {
+            routeService.save(routeDto);
+        } catch (OptimisticLockException ex) {
+            model.addAttribute("error", "Repeat input please");
+            model.addAttribute("routes", routeService.findAll());
+            model.addAttribute("routeDto", new RouteDto());
+            return "home";
+        }
         model.addAttribute("routes", routeService.findAll());
         return "redirect:/";
     }

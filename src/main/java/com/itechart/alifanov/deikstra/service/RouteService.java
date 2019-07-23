@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.OptimisticLockException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RouteService {
+
 
     private final RouteRepository routeRepository;
     private final RouteTransformer routeTransformer;
@@ -31,7 +33,7 @@ public class RouteService {
      * @return returns dto of just saved object
      */
     @Transactional
-    public RouteDto save(final RouteDto routeDto) {
+    public RouteDto save(final RouteDto routeDto) throws OptimisticLockException {
         final Route newRoute = routeTransformer.transform(routeDto);
         Route oldRoute = ifPresent(newRoute);
         if (oldRoute == null) {
