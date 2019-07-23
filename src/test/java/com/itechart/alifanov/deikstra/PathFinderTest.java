@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class PathFinderTest {
 
     private Map<String, Map<String, Double>> outerMap = new HashMap<>();
@@ -73,6 +71,10 @@ public class PathFinderTest {
     }
 
     @Test
+    public void contextLoads() {
+    }
+
+    @Test
     public void testFindAllStoreRoutes() {
         //Given
         List<Route> routes = new ArrayList<>();
@@ -86,7 +88,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRoute_2Cities_1Connection() throws Exception {
+    public void testRoute_2Cities_1Connection() {
         //Given
         RouteDto routeDto = new RouteDto("Tokyo", "Polotsk", (double) 25);
 
@@ -106,7 +108,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRoute_7Cities_10Roads() throws Exception {
+    public void testRoute_7Cities_10Roads() {
         Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk"), (double) 10);
         Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk", "Polotsk"), (double) 18);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin", "Polotsk"), (double) 19);
@@ -141,9 +143,9 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRouteToBerlin(){
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow","Berlin"), (double) 25);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow","Berlin"), (double) 9);
+    public void testRouteToBerlin() {
+        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Berlin"), (double) 25);
+        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin"), (double) 9);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin"), (double) 2);
         List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
@@ -157,9 +159,9 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRouteToMinsk(){
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow","Minsk"), (double) 26);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow","Minsk"), (double) 10);
+    public void testRouteToMinsk() {
+        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Minsk"), (double) 26);
+        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk"), (double) 10);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow", "Minsk"), (double) 28);
         List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
