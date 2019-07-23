@@ -31,6 +31,9 @@ public class PathFinderImpl implements PathFinder {
      */
     @Override
     public List<Pair<List<String>, Double>> findAllPaths(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
         List<Node> nodes = buildNodes(map);
         Node startingNode = findNode(nodes, fromCity);
         Node endingNode = findNode(nodes, toCity);
@@ -110,12 +113,11 @@ public class PathFinderImpl implements PathFinder {
     /**
      * builds list of nodes from input data. it creates node for every distinct key
      * of each map and creates neighbours for every node based on outerMap value
+     *
      * @param map- source data
      * @return list of built nodes
      */
     private List<Node> buildNodes(Map<String, Map<String, Double>> map) {
-        if (map == null)
-            return new LinkedList<>();
         Map<String, Node> createdNodes = new HashMap<>();
         for (Map.Entry<String, Map<String, Double>> entry : map.entrySet()) {
             String city = entry.getKey();
@@ -147,14 +149,17 @@ public class PathFinderImpl implements PathFinder {
 
     /**
      * finds shortest path between two cities using Dijkstra algorithm
-     * @param map - source data
+     *
+     * @param map      - source data
      * @param fromCity - starting point
-     * @param toCity - destination point
+     * @param toCity   - destination point
      * @return null if path doesnt exist. returns pair of the path and its overall distance if it exists.
      */
     @Override
     public Pair<List<String>, Double> findShortestPath(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
-
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
         List<Node> settledNodes = new LinkedList<>();
         List<Node> unsettledNodes = new LinkedList<>();
         List<Node> nodes = buildNodes(map);
@@ -195,7 +200,6 @@ public class PathFinderImpl implements PathFinder {
     }
 
     /**
-     *
      * @param unsettledNodes -
      * @return returns node with lowest distance to it.
      */

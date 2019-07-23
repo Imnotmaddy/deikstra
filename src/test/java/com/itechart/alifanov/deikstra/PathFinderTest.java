@@ -173,6 +173,7 @@ public class PathFinderTest {
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
+
 }
 
 
