@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,16 +20,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class EndpointTest {
+
     @Autowired
     MockMvc mvc;
 
+    private final static String POST_ENDPOINT = "/calculateRoute";
+
     @Test
     public void testCalculateEndpoint() throws Exception {
-        mvc.perform(post("/calculateRoute").flashAttr("routeDto",new RouteDto("Tokyo","Polotsk", (double)0)))
+        mvc.perform(post(POST_ENDPOINT).flashAttr("routeDto", new RouteDto("Tokyo", "Polotsk", (double) 0)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(5)));
     }
 
-
+    @Test
+    public void testIfNoPathBetweenCities() throws Exception {
+        mvc.perform(post(POST_ENDPOINT).flashAttr("routeDto", new RouteDto("fakecity", "anotherfakecirt", (double) 0)))
+                .andExpect(status().isImUsed())
+                .andDo(print());
+    }
 
 }
+
+

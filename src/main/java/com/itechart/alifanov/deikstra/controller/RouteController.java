@@ -6,10 +6,8 @@ import com.itechart.alifanov.deikstra.service.exception.DeikstraAppException;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
@@ -26,7 +24,7 @@ public class RouteController {
         try {
             routeService.save(routeDto);
         } catch (OptimisticLockException ex) {
-            throw new DeikstraAppException("Concurrency issue while saving data", "500");
+            throw new DeikstraAppException("Concurrency issue while saving data");
         }
     }
 
@@ -37,9 +35,16 @@ public class RouteController {
         try {
             result = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
         } catch (PathFinderException ex) {
-            throw new DeikstraAppException(ex.getMessage(), "500");
+            throw new DeikstraAppException(ex.getMessage());
         }
         return result;
     }
+
+    @ExceptionHandler(DeikstraAppException.class)
+    @ResponseStatus(value = HttpStatus.IM_USED)
+    public String handleSaveError(DeikstraAppException ex) {
+        return ex.getMessage();
+    }
+
 }
 
