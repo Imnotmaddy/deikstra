@@ -80,6 +80,12 @@
 
             <button type="submit" form="calculateRouteForm">Calculate route</button>
         </form>
+        <div th:each="pair: ${paths}">
+            <tr th:each="cityName: ${pair.getKey()}">
+                <td th:text="${cityName}"></td>
+            </tr>
+            <span th:text="${pair.getValue()}"></span>
+        </div>
         <h1 th:if="${error != null}" th:text="${error}"></h1>
     </div>
 </div>
