@@ -1,1 +1,1 @@
-To start the application, use your credentials in application.yml to access database
+To start the application, use your credentials in <b>application.yml</b> to access database
