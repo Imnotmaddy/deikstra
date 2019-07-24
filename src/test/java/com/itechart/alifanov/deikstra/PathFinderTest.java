@@ -6,15 +6,19 @@ import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
+import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.PathFinderImpl;
 import javafx.util.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 
@@ -23,7 +27,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureMockMvc
 public class PathFinderTest {
+
+    @Autowired
+    MockMvc mvc;
 
     private Map<String, Map<String, Double>> outerMap = new HashMap<>();
 
@@ -88,7 +96,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRoute_2Cities_1Connection() {
+    public void testRoute_2Cities_1Connection() throws PathFinderException {
         //Given
         RouteDto routeDto = new RouteDto("Tokyo", "Polotsk", (double) 25);
 
@@ -108,7 +116,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRoute_7Cities_10Roads() {
+    public void testRoute_7Cities_10Roads() throws PathFinderException {
         Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk"), (double) 10);
         Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk", "Polotsk"), (double) 18);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin", "Polotsk"), (double) 19);
@@ -127,7 +135,7 @@ public class PathFinderTest {
 
 
     @Test
-    public void testAnotherRoute() {
+    public void testAnotherRoute() throws PathFinderException {
         Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow"), (double) 19);
         Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow"), (double) 3);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow"), (double) 21);
@@ -143,7 +151,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRouteToBerlin() {
+    public void testRouteToBerlin() throws PathFinderException {
         Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Berlin"), (double) 25);
         Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin"), (double) 9);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin"), (double) 2);
@@ -159,7 +167,7 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testRouteToMinsk() {
+    public void testRouteToMinsk() throws PathFinderException {
         Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Minsk"), (double) 26);
         Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk"), (double) 10);
         Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow", "Minsk"), (double) 28);

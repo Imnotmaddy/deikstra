@@ -2,55 +2,44 @@ package com.itechart.alifanov.deikstra.controller;
 
 import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
+import com.itechart.alifanov.deikstra.service.exception.DeikstraAppException;
+import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class RouteController {
 
     private final RouteService routeService;
 
-    @GetMapping("/")
-    public String showHomeView(Model model) {
-        model.addAttribute("routeDto", new RouteDto());
-        model.addAttribute("routes", routeService.findAll());
-        return "home";
-    }
-
     @PostMapping("/createRoute")
-    public String createRoute(@ModelAttribute @Valid RouteDto routeDto, Model model) {
+    public void createRoute(@ModelAttribute @Valid RouteDto routeDto) throws DeikstraAppException {
         try {
             routeService.save(routeDto);
         } catch (OptimisticLockException ex) {
-            model.addAttribute("error", "Repeat input please");
-            model.addAttribute("routes", routeService.findAll());
-            model.addAttribute("routeDto", new RouteDto());
-            return "home";
+            throw new DeikstraAppException("Concurrency issue while saving data", "500");
         }
-        model.addAttribute("routes", routeService.findAll());
-        return "redirect:/";
     }
 
     @PostMapping("/calculateRoute")
-    public String calculateRoute(@ModelAttribute RouteDto routeDto, Model model) {
-        final List<Pair<List<String>, Double>> routes = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
-        if (routes == null) {
-            model.addAttribute("error", "No connection between cities");
+    @ResponseBody
+    public List<Pair<List<String>, Double>> calculateRoute(@ModelAttribute RouteDto routeDto) throws DeikstraAppException {
+        final List<Pair<List<String>, Double>> result;
+        try {
+            result = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
+        } catch (PathFinderException ex) {
+            throw new DeikstraAppException(ex.getMessage(), "500");
         }
-        model.addAttribute("paths", routes);
-        model.addAttribute("routeDto", new RouteDto());
-        model.addAttribute("routes", routeService.findAll());
-        return "home";
+        return result;
     }
-
 }
+

@@ -1,5 +1,6 @@
 package com.itechart.alifanov.deikstra.service.search.searchImpl;
 
+import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import javafx.util.Pair;
 import org.springframework.context.annotation.Scope;
@@ -30,14 +31,17 @@ public class PathFinderImpl implements PathFinder {
      * as List<String> and overall path distance as Double value;
      */
     @Override
-    public List<Pair<List<String>, Double>> findAllPaths(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
+    public List<Pair<List<String>, Double>> findAllPaths(Map<String, Map<String, Double>> map, String fromCity, String toCity) throws PathFinderException {
         if (map == null || map.isEmpty()) {
-            return null;
+            throw new PathFinderException("No paths between cities were found");
         }
+
         List<Node> nodes = buildNodes(map);
         Node startingNode = findNode(nodes, fromCity);
         Node endingNode = findNode(nodes, toCity);
-        if (startingNode == null || endingNode == null) return null;
+
+        if (startingNode == null || endingNode == null)
+            throw new PathFinderException("No paths between cities were found");
 
         List<Node> areVisited = new LinkedList<>();
         LinkedList<Node> queue = new LinkedList<>();
@@ -52,8 +56,7 @@ public class PathFinderImpl implements PathFinder {
      * @param source - data for building result
      * @return - result representation
      */
-    private List<Pair<List<String>, Double>> buildResult(List<Pair<List<Node>, Double>> source) {
-        if (source.isEmpty()) return null;
+    private List<Pair<List<String>, Double>> buildResult(List<Pair<List<Node>, Double>> source) throws PathFinderException {
         List<Pair<List<String>, Double>> result = new LinkedList<>();
         for (Pair<List<Node>, Double> value : source) {
             List<String> innerList = new LinkedList<>();
@@ -62,6 +65,8 @@ public class PathFinderImpl implements PathFinder {
             }
             result.add(new Pair<>(innerList, value.getValue()));
         }
+        if (result.isEmpty())
+            throw new PathFinderException("No paths between cities were found");
         return result;
     }
 

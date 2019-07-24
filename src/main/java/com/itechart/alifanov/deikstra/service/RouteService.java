@@ -5,6 +5,7 @@ import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.service.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
+import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,13 +48,6 @@ public class RouteService {
     }
 
     /**
-     * @return returns dtos of all found routes
-     */
-    public List<RouteDto> findAll() {
-        return routeTransformer.transformListToDto(findAllStoredRoutes());
-    }
-
-    /**
      * @return returns all stored in DB routes
      */
     public List<Route> findAllStoredRoutes() {
@@ -70,7 +64,7 @@ public class RouteService {
      * overall distance.
      */
     public Pair<List<String>, Double> calculateShortestRoute(String fromCity, String toCity) {
-        final List<Route> routes = routeTransformer.transformListToRoute(this.findAll());
+        final List<Route> routes = this.findAllStoredRoutes();
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
         return pathFinder.findShortestPath(routeMap, fromCity, toCity);
     }
@@ -82,7 +76,7 @@ public class RouteService {
      * list of pairs, where each pair is a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
      */
-    public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) {
+    public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
         final List<Route> routes = this.findAllStoredRoutes();
         final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
         return pathFinder.findAllPaths(routeMap, fromCity, toCity);
