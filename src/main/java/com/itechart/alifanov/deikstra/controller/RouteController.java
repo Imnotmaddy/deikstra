@@ -42,7 +42,7 @@ public class RouteController {
 
     @ExceptionHandler(DeikstraAppException.class)
     @ResponseStatus(value = HttpStatus.IM_USED)
-    public String handleSaveError(DeikstraAppException ex) {
+    public String handleAppErrors(DeikstraAppException ex) {
         return ex.getMessage();
     }
 
