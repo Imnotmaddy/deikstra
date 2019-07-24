@@ -72,7 +72,7 @@ public class RouteService {
     /**
      * @param fromCity - starting city
      * @param toCity   - destination city
-     * @return - returns null if no paths were found. If path exists method returns
+     * @return - throws exception if no paths were found. If path exists method returns
      * list of pairs, where each pair is a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
      */

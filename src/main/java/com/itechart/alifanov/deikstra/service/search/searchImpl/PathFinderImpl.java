@@ -26,7 +26,7 @@ public class PathFinderImpl implements PathFinder {
      * @param map      - source data for building nodes
      * @param fromCity - starting point
      * @param toCity   - destination point
-     * @return - returns null if no paths were found. If path exists method returns
+     * @return - If path exists method returns
      * list of pairs, where each pair is a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
      */
@@ -52,7 +52,7 @@ public class PathFinderImpl implements PathFinder {
 
     /**
      * Transforms node values into field values. Basically it replaces Node with its name
-     *
+     * if there is no path, exception is thrown.
      * @param source - data for building result
      * @return - result representation
      */
