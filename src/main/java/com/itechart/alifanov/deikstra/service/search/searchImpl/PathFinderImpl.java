@@ -43,8 +43,8 @@ public class PathFinderImpl implements PathFinder {
         if (startingNode == null || endingNode == null)
             throw new PathFinderException("No paths between cities were found");
 
-        List<Node> areVisited = new LinkedList<>();
-        LinkedList<Node> queue = new LinkedList<>();
+        List<Node> areVisited = new ArrayList<>();
+        List<Node> queue = new ArrayList<>();
         queue.add(startingNode);
         findPath(startingNode, endingNode, areVisited, queue, (double) 0);
         return buildResult(this.allPaths);
@@ -57,9 +57,9 @@ public class PathFinderImpl implements PathFinder {
      * @return - result representation
      */
     private List<Pair<List<String>, Double>> buildResult(List<Pair<List<Node>, Double>> source) throws PathFinderException {
-        List<Pair<List<String>, Double>> result = new LinkedList<>();
+        List<Pair<List<String>, Double>> result = new ArrayList<>();
         for (Pair<List<Node>, Double> value : source) {
-            List<String> innerList = new LinkedList<>();
+            List<String> innerList = new ArrayList<>();
             for (Node node : value.getKey()) {
                 innerList.add(node.getName());
             }
@@ -149,7 +149,7 @@ public class PathFinderImpl implements PathFinder {
             }
             createdNodes.put(city, node);
         }
-        return new LinkedList<>(createdNodes.values());
+        return new ArrayList<>(createdNodes.values());
     }
 
     /**
