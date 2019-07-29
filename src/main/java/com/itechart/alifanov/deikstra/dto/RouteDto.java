@@ -1,4 +1,4 @@
-package com.itechart.alifanov.deikstra.service.dto;
+package com.itechart.alifanov.deikstra.dto;
 
 import lombok.*;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RouteDto implements Dto {
+public class RouteDto {
     @NotNull
     @NotBlank
     private String cityA;

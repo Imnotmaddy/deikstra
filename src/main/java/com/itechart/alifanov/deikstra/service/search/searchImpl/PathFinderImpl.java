@@ -53,6 +53,7 @@ public class PathFinderImpl implements PathFinder {
     /**
      * Transforms node values into field values. Basically it replaces Node with its name
      * if there is no path, exception is thrown.
+     *
      * @param source - data for building result
      * @return - result representation
      */
@@ -127,7 +128,7 @@ public class PathFinderImpl implements PathFinder {
         for (Map.Entry<String, Map<String, Double>> entry : map.entrySet()) {
             String city = entry.getKey();
             Map<String, Double> neighbours = entry.getValue();
-            Map<Node, Double> nodeNeighbours = new LinkedHashMap<>();
+            Map<Node, Double> nodeNeighbours = new HashMap<>();
 
             neighbours.forEach((neighbourCity, distance) -> {
                 Node currentNeighbour;
@@ -151,84 +152,4 @@ public class PathFinderImpl implements PathFinder {
         }
         return new ArrayList<>(createdNodes.values());
     }
-
-    /**
-     * finds shortest path between two cities using Dijkstra algorithm
-     *
-     * @param map      - source data
-     * @param fromCity - starting point
-     * @param toCity   - destination point
-     * @return null if path doesnt exist. returns pair of the path and its overall distance if it exists.
-     */
-    @Override
-    public Pair<List<String>, Double> findShortestPath(Map<String, Map<String, Double>> map, String fromCity, String toCity) {
-        if (map == null || map.isEmpty()) {
-            return null;
-        }
-        List<Node> settledNodes = new LinkedList<>();
-        List<Node> unsettledNodes = new LinkedList<>();
-        List<Node> nodes = buildNodes(map);
-
-        Node startingNode = findNode(nodes, fromCity);
-        if (startingNode == null) return null;
-        startingNode.setDistance((double) 0);
-        unsettledNodes.add(startingNode);
-
-        while (unsettledNodes.size() != 0) {
-            Node currentNode = getLowestDistanceNode(unsettledNodes);
-            unsettledNodes.remove(currentNode);
-            if (currentNode != null && currentNode.getNeighbours() != null) {
-                for (Map.Entry<Node, Double> pair : currentNode.getNeighbours().entrySet()) {
-                    Node neighbour = pair.getKey();
-                    Double distance = pair.getValue();
-                    if (!settledNodes.contains(neighbour)) {
-                        calculateMinimumDistance(neighbour, distance, currentNode);
-                        unsettledNodes.add(neighbour);
-                    }
-                }
-            }
-            settledNodes.add(currentNode);
-        }
-
-        return buildResult(toCity, settledNodes);
-    }
-
-    private Pair<List<String>, Double> buildResult(String toCity, List<Node> nodes) {
-        Node node = findNode(nodes, toCity);
-        if (node == null) return null;
-        List<String> path = new LinkedList<>();
-        for (Node pathNodes : node.getShortestPath()) {
-            path.add(pathNodes.getName());
-        }
-        path.add(toCity);
-        return new Pair<>(path, node.getDistance());
-    }
-
-    /**
-     * @param unsettledNodes -
-     * @return returns node with lowest distance to it.
-     */
-    private Node getLowestDistanceNode(List<Node> unsettledNodes) {
-        Node lowestDistanceNode = null;
-        double lowestDistance = Double.MAX_VALUE;
-
-        for (Node unsettledNode : unsettledNodes) {
-            if (unsettledNode.getDistance() < lowestDistance) {
-                lowestDistance = unsettledNode.getDistance();
-                lowestDistanceNode = unsettledNode;
-            }
-        }
-        return lowestDistanceNode;
-    }
-
-    private void calculateMinimumDistance(Node evaluationNode, Double distance, Node sourceNode) {
-        Double sourceDistance = sourceNode.getDistance();
-        if (sourceDistance + distance < evaluationNode.getDistance()) {
-            evaluationNode.setDistance(sourceDistance + distance);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-            shortestPath.add(sourceNode);
-            evaluationNode.setShortestPath(shortestPath);
-        }
-    }
-
 }

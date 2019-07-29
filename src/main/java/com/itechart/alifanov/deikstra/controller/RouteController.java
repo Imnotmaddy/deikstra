@@ -1,7 +1,7 @@
 package com.itechart.alifanov.deikstra.controller;
 
 import com.itechart.alifanov.deikstra.service.RouteService;
-import com.itechart.alifanov.deikstra.service.dto.RouteDto;
+import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.exception.DeikstraAppException;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;
@@ -19,7 +19,7 @@ public class RouteController {
 
     private final RouteService routeService;
 
-    @PostMapping("/createRoute")
+    @PostMapping("/route")
     public void createRoute(@ModelAttribute @Valid RouteDto routeDto) throws DeikstraAppException {
         try {
             routeService.save(routeDto);
@@ -28,7 +28,7 @@ public class RouteController {
         }
     }
 
-    @PostMapping("/calculateRoute")
+    @PostMapping("/route/calculate")
     @ResponseBody
     public List<Pair<List<String>, Double>> calculateRoute(@ModelAttribute RouteDto routeDto) throws DeikstraAppException {
         final List<Pair<List<String>, Double>> result;

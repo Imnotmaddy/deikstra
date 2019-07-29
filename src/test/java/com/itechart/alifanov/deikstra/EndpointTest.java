@@ -1,7 +1,7 @@
 package com.itechart.alifanov.deikstra;
 
 
-import com.itechart.alifanov.deikstra.service.dto.RouteDto;
+import com.itechart.alifanov.deikstra.dto.RouteDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ public class EndpointTest {
     @Autowired
     MockMvc mvc;
 
-    private final static String POST_ENDPOINT = "/calculateRoute";
+    private final static String POST_ENDPOINT = "/route/calculate";
 
     @Test
     public void testCalculateEndpoint() throws Exception {
         mvc.perform(post(POST_ENDPOINT).flashAttr("routeDto", new RouteDto("Tokyo", "Polotsk", (double) 0)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test

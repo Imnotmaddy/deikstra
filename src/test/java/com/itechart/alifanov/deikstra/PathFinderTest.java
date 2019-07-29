@@ -3,8 +3,8 @@ package com.itechart.alifanov.deikstra;
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.service.RouteService;
-import com.itechart.alifanov.deikstra.service.dto.RouteDto;
-import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
+import com.itechart.alifanov.deikstra.dto.RouteDto;
+import com.itechart.alifanov.deikstra.dto.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.PathFinderImpl;
@@ -41,13 +41,13 @@ public class PathFinderTest {
     @MockBean
     private RouteRepository routeRepository;
 
-    private RouteTransformer routeTransformer = new RouteTransformer();
+    private RouteMapper routeMapper = new RouteMapper();
 
     private PathFinder pathFinder = new PathFinderImpl();
 
     @Before
     public void init() {
-        routeService = new RouteService(routeRepository, routeTransformer, new PathFinderImpl());
+        routeService = new RouteService(routeRepository, routeMapper, new PathFinderImpl());
         Route route1 = new Route("Tokyo", "AngelTown", (double) 1);
         Route route2 = new Route("Tokyo", "Berlin", (double) 2);
         Route route3 = new Route("Tokyo", "Moscow", (double) 3);

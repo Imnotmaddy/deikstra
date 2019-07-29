@@ -2,8 +2,8 @@ package com.itechart.alifanov.deikstra.service;
 
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
-import com.itechart.alifanov.deikstra.service.dto.RouteDto;
-import com.itechart.alifanov.deikstra.service.dtoTransformer.RouteTransformer;
+import com.itechart.alifanov.deikstra.dto.RouteDto;
+import com.itechart.alifanov.deikstra.dto.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;
@@ -22,7 +22,7 @@ public class RouteService {
 
 
     private final RouteRepository routeRepository;
-    private final RouteTransformer routeTransformer;
+    private final RouteMapper routeMapper;
     private final PathFinder pathFinder;
 
     /**
@@ -35,15 +35,15 @@ public class RouteService {
      */
     @Transactional
     public RouteDto save(final RouteDto routeDto) throws OptimisticLockException {
-        final Route newRoute = routeTransformer.transform(routeDto);
+        final Route newRoute = routeMapper.transform(routeDto);
         Route oldRoute = ifPresent(newRoute);
         if (oldRoute == null) {
             routeRepository.save(newRoute);
-            return routeTransformer.transform(newRoute);
+            return routeMapper.transform(newRoute);
         } else {
             oldRoute.setDistance(newRoute.getDistance());
             routeRepository.save(oldRoute);
-            return routeTransformer.transform(oldRoute);
+            return routeMapper.transform(oldRoute);
         }
     }
 
@@ -52,21 +52,6 @@ public class RouteService {
      */
     public List<Route> findAllStoredRoutes() {
         return routeRepository.findAll();
-    }
-
-    /**
-     * Method finds shortest path between two cities if it exists.
-     *
-     * @param fromCity - starting city
-     * @param toCity   - destination city
-     * @return - returns null if no paths were found. If path exists method
-     * returns pair of List<String> and Double, where list value is the shortest path and double value is the
-     * overall distance.
-     */
-    public Pair<List<String>, Double> calculateShortestRoute(String fromCity, String toCity) {
-        final List<Route> routes = this.findAllStoredRoutes();
-        final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-        return pathFinder.findShortestPath(routeMap, fromCity, toCity);
     }
 
     /**
