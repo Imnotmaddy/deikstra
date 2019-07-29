@@ -1,24 +1,19 @@
 package com.itechart.alifanov.deikstra;
 
+import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.service.RouteService;
-import com.itechart.alifanov.deikstra.dto.RouteDto;
-import com.itechart.alifanov.deikstra.dto.mapper.RouteMapper;
+import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.PathFinderImpl;
 import javafx.util.Pair;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
 
@@ -26,12 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
 public class PathFinderTest {
-
-    @Autowired
-    MockMvc mvc;
 
     private Map<String, Map<String, Double>> outerMap = new HashMap<>();
 
@@ -41,13 +31,11 @@ public class PathFinderTest {
     @MockBean
     private RouteRepository routeRepository;
 
-    private RouteMapper routeMapper = new RouteMapper();
-
     private PathFinder pathFinder = new PathFinderImpl();
 
     @Before
     public void init() {
-        routeService = new RouteService(routeRepository, routeMapper, new PathFinderImpl());
+        routeService = new RouteService(routeRepository, new RouteMapper(), new PathFinderImpl());
         Route route1 = new Route("Tokyo", "AngelTown", (double) 1);
         Route route2 = new Route("Tokyo", "Berlin", (double) 2);
         Route route3 = new Route("Tokyo", "Moscow", (double) 3);
@@ -71,15 +59,6 @@ public class PathFinderTest {
         routes.add(route8);
         routes.add(route9);
         this.outerMap = routeService.buildMatrix(routes);
-    }
-
-    @BeforeEach
-    public void initPathFinder() {
-        pathFinder = new PathFinderImpl();
-    }
-
-    @Test
-    public void contextLoads() {
     }
 
     @Test
@@ -181,7 +160,6 @@ public class PathFinderTest {
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
-
 }
 
 

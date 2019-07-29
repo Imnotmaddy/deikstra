@@ -1,4 +1,4 @@
-package com.itechart.alifanov.deikstra.dto.mapper;
+package com.itechart.alifanov.deikstra.service.mapper;
 
 import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.model.Route;

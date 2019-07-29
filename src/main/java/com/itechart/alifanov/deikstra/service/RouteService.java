@@ -3,7 +3,7 @@ package com.itechart.alifanov.deikstra.service;
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
 import com.itechart.alifanov.deikstra.dto.RouteDto;
-import com.itechart.alifanov.deikstra.dto.mapper.RouteMapper;
+import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import javafx.util.Pair;

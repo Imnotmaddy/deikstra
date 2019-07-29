@@ -43,7 +43,7 @@ public class PathFinderImpl implements PathFinder {
         if (startingNode == null || endingNode == null)
             throw new PathFinderException("No paths between cities were found");
 
-        List<Node> areVisited = new ArrayList<>();
+        Set<Node> areVisited = new HashSet<>();
         List<Node> queue = new ArrayList<>();
         queue.add(startingNode);
         findPath(startingNode, endingNode, areVisited, queue, (double) 0);
@@ -58,7 +58,7 @@ public class PathFinderImpl implements PathFinder {
      * @return - result representation
      */
     private List<Pair<List<String>, Double>> buildResult(List<Pair<List<Node>, Double>> source) throws PathFinderException {
-        List<Pair<List<String>, Double>> result = new ArrayList<>();
+        List<Pair<List<String>, Double>> result = new ArrayList<>(source.size());
         for (Pair<List<Node>, Double> value : source) {
             List<String> innerList = new ArrayList<>();
             for (Node node : value.getKey()) {
@@ -81,7 +81,7 @@ public class PathFinderImpl implements PathFinder {
      * @param currentPath     - currently built path. every current node is added here at some point
      * @param currentDistance - based in currentPath distance
      */
-    private void findPath(Node currentNode, Node targetNode, List<Node> areVisited, List<Node> currentPath, Double currentDistance) {
+    private void findPath(Node currentNode, Node targetNode, Set<Node> areVisited, List<Node> currentPath, Double currentDistance) {
         areVisited.add(currentNode);
         if (currentNode == targetNode) {
             areVisited.remove(currentNode);
