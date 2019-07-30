@@ -47,6 +47,7 @@ public class PathFinderTest {
         Route route8 = new Route("Minsk", "Polotsk", (double) 8);
         Route route9 = new Route("Polotsk", "Moscow", (double) 9);
         Route route0 = new Route("Berlin", "Polotsk", (double) 10);
+        Route route = new Route("Tokyo", "NullPointerException", (double)2);
 
         List<Route> routes = new ArrayList<>();
         routes.add(route0);
@@ -59,11 +60,12 @@ public class PathFinderTest {
         routes.add(route7);
         routes.add(route8);
         routes.add(route9);
+        routes.add(route);
         this.nodes = routeService.buildNodes(routes);
     }
 
     @Test
-    public void testFindAllStoreRoutes() {
+    public void testFindAllStoreRoutes()  {
         //Given
         List<Route> routes = new ArrayList<>();
         routes.add(new Route("Tokyo", "Moscow", (double) 2));

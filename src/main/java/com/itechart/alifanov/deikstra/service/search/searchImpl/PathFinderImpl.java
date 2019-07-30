@@ -9,8 +9,7 @@ import java.util.*;
 
 /**
  * This class implements algorithm for finding all paths between two
- * Nodes with breadth-first search. It also implements Dijkstra algorithm for
- * finding shortest path between two Nodes;
+ * Nodes with breadth-first search.
  * <p>
  * allPaths - stores all found paths from one Node to another
  */
@@ -102,7 +101,7 @@ public class PathFinderImpl implements PathFinder {
     /**
      * finds target node in the list
      *
-     * @param nodes  - list to be searched
+     * @param nodes  - set of nodes to be searched
      * @param target - node to be found
      * @return returns Node if it exists. returns null if node doesnt exists
      */

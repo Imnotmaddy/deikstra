@@ -90,10 +90,10 @@ public class RouteService {
             String cityA = route.getCityA();
             String cityB = route.getCityB();
 
-            Node currentNode = createdNodes.getOrDefault(cityA, new Node(cityA, null));
-            Node neighbour = createdNodes.getOrDefault(cityB, new Node(cityB, null));
+            Node currentNode = createdNodes.getOrDefault(cityA, new Node(cityA, new HashMap<>()));
+            Node neighbour = createdNodes.getOrDefault(cityB, new Node(cityB, new HashMap<>()));
 
-            if (currentNode.getNeighbours() == null) {
+            if (currentNode.getNeighbours().isEmpty()) {
                 Map<Node, Double> neighbours = new HashMap<>();
                 neighbours.put(neighbour, route.getDistance());
                 currentNode.setNeighbours(neighbours);
