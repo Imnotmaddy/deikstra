@@ -29,11 +29,10 @@ public class PathFinderImpl implements PathFinder {
             throw new PathFinderException("No paths between cities were found");
         }
 
-        Set<Node> areVisited = new HashSet<>();
         Queue<Node> queue = new LinkedList<>();
         queue.add(startingNode);
 
-        final List<Pair<Queue<Node>, Double>> result = findPath(startingNode, toCity, areVisited, queue, (double) 0, new LinkedList<>());
+        final List<Pair<Queue<Node>, Double>> result = findPath(startingNode, toCity, new HashSet<>(), queue, (double) 0, new LinkedList<>());
         return buildResult(result);
     }
 
@@ -86,21 +85,5 @@ public class PathFinderImpl implements PathFinder {
         if (result.isEmpty())
             throw new PathFinderException("No paths between cities were found");
         return result;
-    }
-
-
-    /**
-     * finds target node in the list
-     *
-     * @param nodes  - set of nodes to be searched
-     * @param target - node to be found
-     * @return returns Node if it exists. returns null if node doesnt exists
-     */
-    private Node findNode(Set<Node> nodes, String target) {
-        for (Node node : nodes) {
-            if (node.getName().equals(target))
-                return node;
-        }
-        return null;
     }
 }
