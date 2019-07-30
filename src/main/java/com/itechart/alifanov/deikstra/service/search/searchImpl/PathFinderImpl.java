@@ -23,7 +23,7 @@ public class PathFinderImpl implements PathFinder {
      */
     @Override
     public List<SearchResultDto> findAllPaths(Node startingNode, String toCity) throws PathFinderException {
-        if (startingNode == null) {
+        if (startingNode == null || startingNode.getNeighbours() == null) {
             throw new PathFinderException("No paths between cities were found");
         }
 

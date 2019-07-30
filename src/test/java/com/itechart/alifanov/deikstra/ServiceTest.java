@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ServiceTest {
 
     @Autowired
-    RouteRepository repository;
+    private RouteRepository repository;
 
     @Test(expected = ObjectOptimisticLockingFailureException.class)
     public void testIfVersionConflict_thenOptimisticExceptionThrown() {

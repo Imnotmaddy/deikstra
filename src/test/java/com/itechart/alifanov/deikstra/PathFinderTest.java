@@ -149,6 +149,19 @@ public class PathFinderTest {
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
+
+    @Test(expected = PathFinderException.class)
+    public void ifNoNeighbours_thenPathFinderException() throws PathFinderException {
+        Node node = new Node("Node", null);
+        pathFinder.findAllPaths(node, "wherever");
+    }
+
+    @Test(expected = PathFinderException.class)
+    public void whenNull_thenPathFinderException() throws PathFinderException{
+        pathFinder.findAllPaths(null, "wherever");
+    }
+
+
 }
 
 
