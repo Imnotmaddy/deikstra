@@ -169,11 +169,12 @@ public class PathFinderTest {
     }
 
     @Test
-    public void testAnotherRoute() throws PathFinderException {
+    public void testCircleRoute() throws PathFinderException {
         Route route0 = new Route("A", "B", (double) 1);
         Route route1 = new Route("B", "C", (double) 1);
         Route route2 = new Route("C", "D", (double) 1);
         Route route3 = new Route("D", "A", (double) 1);
+
         Route route4 = new Route("A", "E", (double) 1);
         Route route5 = new Route("B", "E", (double) 1);
         Route route6 = new Route("C", "E", (double) 1);

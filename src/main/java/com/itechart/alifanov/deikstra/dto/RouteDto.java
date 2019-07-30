@@ -12,10 +12,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RouteDto {
-    @NotNull
     @NotBlank
     private String cityA;
-    @NotNull
     @NotBlank
     private String cityB;
     @NotNull

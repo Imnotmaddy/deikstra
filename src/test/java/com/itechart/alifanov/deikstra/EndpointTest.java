@@ -39,7 +39,7 @@ public class EndpointTest {
 
     @Test
     public void testIfNoPathBetweenCities_thenInternalServerError() throws Exception {
-        mvc.perform(post(ROUTE_CALCULATE).flashAttr("routeDto", new RouteDto("fakecity", "anotherfakecirt", (double) 0)))
+        mvc.perform(post(ROUTE_CALCULATE).flashAttr("routeDto", new RouteDto("whatever", "stillWhatever", (double) 0)))
                 .andExpect(status().isInternalServerError())
                 .andDo(print());
     }

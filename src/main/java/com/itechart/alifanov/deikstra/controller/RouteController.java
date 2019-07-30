@@ -25,7 +25,7 @@ public class RouteController {
 
     @PostMapping("/route/calculate")
     @ResponseBody
-    public List<SearchResultDto> calculateRoute(@ModelAttribute RouteDto routeDto) throws PathFinderException {
+    public List<SearchResultDto> calculateRoute(@ModelAttribute @Valid RouteDto routeDto) throws PathFinderException {
         final List<SearchResultDto> result;
         result = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
         return result;
