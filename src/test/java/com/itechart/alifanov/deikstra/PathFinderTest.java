@@ -60,7 +60,8 @@ public class PathFinderTest {
         routes.add(route8);
         routes.add(route9);
         routes.add(route);
-        tokyoStartingNode = routeService.getStartingNode(routes, "Tokyo");
+
+        tokyoStartingNode = routeService.buildNodes(routes).getOrDefault("Tokyo", null);
     }
 
     @Test

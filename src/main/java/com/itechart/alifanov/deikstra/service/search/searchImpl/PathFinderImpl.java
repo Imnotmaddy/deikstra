@@ -9,17 +9,17 @@ import java.util.*;
 /**
  * This class implements algorithm for finding all paths between two
  * Nodes with breadth-first search.
- * <p>
- * allPaths - stores all found paths from one Node to another
  */
 @Component
 public class PathFinderImpl implements PathFinder {
 
     /**
-     * @param toCity - destination point
-     * @return - If path exists method returns
-     * list of pairs, where each pair is a route between starting point and destination represented
-     * as List<String> and overall path distance as Double value;
+     * @param startingNode - entry point of the search
+     * @param toCity       - destination point
+     * @return - if path exists method returns list of objects, where each object
+     * * contains a route between starting point and destination represented
+     * * as List<String> and overall path distance as Double value;
+     * @throws PathFinderException - thrown if no path was found
      */
     @Override
     public List<SearchResultDto> findAllPaths(Node startingNode, String toCity) throws PathFinderException {
@@ -34,13 +34,15 @@ public class PathFinderImpl implements PathFinder {
     }
 
     /**
-     * Recursive methods which checks every neighbour of every node. when it finds a path to targetNode it stores it
-     * in allPaths.
-     *
-     * @param currentNode     - node, which neighbours are being evaluated
-     * @param areVisited      - list of nodes which were visited to avoid endless cycles
-     * @param currentPath     - currently built path. every current node is added here at some point
-     * @param currentDistance - based in currentPath distance
+     * @param currentNode     -    node, which neighbours are being evaluated
+     * @param targetCity      - name of the node, which is the end point for search
+     * @param areVisited      -     set of node names which were visited, to avoid endless cycles
+     * @param currentPath     - list of node names, which are present in currently built path
+     * @param currentDistance - sum of distances between nodes in currentPath
+     * @param result          - placeholder for all found paths
+     * @return - if path exists method returns list of objects, where each object
+     * * * contains a route between starting point and destination represented
+     * * * as List<String> and overall path distance as Double value;
      */
     private List<SearchResultDto> findPath(Node currentNode, String targetCity, Set<String> areVisited, Queue<String> currentPath, Double currentDistance, List<SearchResultDto> result) {
         areVisited.add(currentNode.getName());

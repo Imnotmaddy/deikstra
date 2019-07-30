@@ -13,7 +13,7 @@ public class RouteMapper {
      * @param routeDto - Dto object for transformation
      * @return returns new Route based on routeDto insides.
      */
-    public Route transform(RouteDto routeDto) {
+    public Route toEntity(RouteDto routeDto) {
         return Route.builder()
                 .cityA(routeDto.getCityA())
                 .cityB(routeDto.getCityB())
@@ -25,7 +25,7 @@ public class RouteMapper {
      * @param route - Route object for transformation
      * @return returns new RouteDto based on Route insides
      */
-    public RouteDto transform(Route route) {
+    public RouteDto toDto(Route route) {
         return RouteDto.builder()
                 .cityA(route.getCityA())
                 .cityB(route.getCityB())

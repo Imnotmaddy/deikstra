@@ -27,24 +27,24 @@ public class RouteService {
     private final PathFinder pathFinder;
 
     /**
-     * Method transforms dto into Route object, checks if any Route with
-     * both cities already exists in dataBase. If so it overrides existing data.
+     * Method transforms routeDto into Route object, checks if any Route with
+     * cityA and cityB already exists in dataBase. If so it overrides existing data.
      * Otherwise it saves new Route entity;
      *
      * @param routeDto - instance for saving
-     * @return returns dto of just saved object
+     * @return returns dto of saved object
      */
     @Transactional
     public RouteDto save(final RouteDto routeDto) throws OptimisticLockException {
-        final Route newRoute = routeMapper.transform(routeDto);
+        final Route newRoute = routeMapper.toEntity(routeDto);
         Route oldRoute = ifPresent(newRoute);
         if (oldRoute == null) {
             routeRepository.save(newRoute);
-            return routeMapper.transform(newRoute);
+            return routeMapper.toDto(newRoute);
         } else {
             oldRoute.setDistance(newRoute.getDistance());
             routeRepository.save(oldRoute);
-            return routeMapper.transform(oldRoute);
+            return routeMapper.toDto(oldRoute);
         }
     }
 
@@ -58,35 +58,39 @@ public class RouteService {
     /**
      * @param fromCity - starting city
      * @param toCity   - destination city
-     * @return - throws exception if no paths were found. If path exists method returns
-     * list of pairs, where each pair is a route between starting point and destination represented
+     * @return - if path exists method returns list of objects, where each object
+     * contains a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
+     * @throws PathFinderException thrown if no paths between cities were found
      */
     public List<SearchResultDto> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
         final List<Route> routes = this.findAllStoredRoutes();
-        return pathFinder.findAllPaths(getStartingNode(routes, fromCity), toCity);
+        final Node startingNode = buildNodes(routes).getOrDefault(fromCity, null);
+        return pathFinder.findAllPaths(startingNode, toCity);
     }
 
     /**
-     * method checks if route with its cities already exists in dataBase;
+     * method checks if there is a route from cityA to cityB
+     * or from cityB to cityA
      *
-     * @param route -
+     * @param route - route to be checked
      * @return - returns null if no such route was found. otherwise returns found instance;
      */
     private Route ifPresent(Route route) {
         Route existingRoute = routeRepository.findByCityAAndCityB(route.getCityA(), route.getCityB());
-        Route reverseRoute = routeRepository.findByCityAAndCityB(route.getCityB(), route.getCityA());
         if (existingRoute == null) {
-            return reverseRoute;
+            return routeRepository.findByCityAAndCityB(route.getCityB(), route.getCityA());
         }
         return existingRoute;
     }
 
-    public Node getStartingNode(List<Route> routes, String fromCity) {
-        return buildNodes(routes).getOrDefault(fromCity, null);
-    }
-
-    private Map<String, Node> buildNodes(List<Route> routes) {
+    /**
+     * Method transforms routes into Nodes and builds neighbours for each Node.
+     *
+     * @param routes - routes to be transformed into Nodes
+     * @return - returns map where key is name of the node, stored in value of that entry.
+     */
+    public Map<String, Node> buildNodes(List<Route> routes) {
         if (routes == null || routes.isEmpty())
             return new HashMap<>();
 
