@@ -49,7 +49,7 @@ public class RouteService {
     /**
      * @return returns all stored in DB routes
      */
-    public List<Route> findAllStoredRoutes() {
+    private List<Route> findAllStoredRoutes() {
         return routeRepository.findAll();
     }
 
@@ -62,7 +62,7 @@ public class RouteService {
      */
     public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
         final List<Route> routes = this.findAllStoredRoutes();
-        return pathFinder.findAllPaths(buildNodes(routes), fromCity, toCity);
+        return pathFinder.findAllPaths(getStartingNode(routes, fromCity), toCity);
     }
 
     /**
@@ -80,9 +80,13 @@ public class RouteService {
         return existingRoute;
     }
 
-    public Set<Node> buildNodes(List<Route> routes) {
+    public Node getStartingNode(List<Route> routes, String fromCity) {
+        return buildNodes(routes).getOrDefault(fromCity, null);
+    }
+
+    private Map<String, Node> buildNodes(List<Route> routes) {
         if (routes == null || routes.isEmpty())
-            return new HashSet<>();
+            return new HashMap<>();
 
         Map<String, Node> createdNodes = new HashMap<>();
 
@@ -104,7 +108,7 @@ public class RouteService {
             createdNodes.put(cityB, neighbour);
         }
 
-        return new HashSet<>(createdNodes.values());
+        return createdNodes;
     }
 
 }

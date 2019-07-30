@@ -17,31 +17,23 @@ import java.util.*;
 public class PathFinderImpl implements PathFinder {
 
     /**
-     * @param nodes    - contains all nodes
-     * @param fromCity - starting point
+     *
      * @param toCity   - destination point
      * @return - If path exists method returns
      * list of pairs, where each pair is a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
      */
     @Override
-    public List<Pair<List<String>, Double>> findAllPaths(Set<Node> nodes, String fromCity, String toCity) throws PathFinderException {
-        if (nodes == null || nodes.isEmpty()) {
+    public List<Pair<List<String>, Double>> findAllPaths(Node startingNode, String toCity) throws PathFinderException {
+        if (startingNode == null) {
             throw new PathFinderException("No paths between cities were found");
         }
 
-        Node startingNode = findNode(nodes, fromCity);
-        Node endingNode = findNode(nodes, toCity);
-
-        if (startingNode == null || endingNode == null)
-            throw new PathFinderException("No paths between cities were found");
-
         Set<Node> areVisited = new HashSet<>();
-
         Queue<Node> queue = new LinkedList<>();
-
         queue.add(startingNode);
-        final List<Pair<Queue<Node>, Double>> result = findPath(startingNode, endingNode, areVisited, queue, (double) 0, new LinkedList<>());
+
+        final List<Pair<Queue<Node>, Double>> result = findPath(startingNode, toCity, areVisited, queue, (double) 0, new LinkedList<>());
         return buildResult(result);
     }
 
@@ -50,14 +42,13 @@ public class PathFinderImpl implements PathFinder {
      * in allPaths.
      *
      * @param currentNode     - node, which neighbours are being evaluated
-     * @param targetNode      - stop point for recursion. Destination node
      * @param areVisited      - list of nodes which were visited to avoiud endless cycles
      * @param currentPath     - currently built path. every current node is added here at some point
      * @param currentDistance - based in currentPath distance
      */
-    private List<Pair<Queue<Node>, Double>> findPath(Node currentNode, Node targetNode, Set<Node> areVisited, Queue<Node> currentPath, Double currentDistance, List<Pair<Queue<Node>, Double>> result) {
+    private List<Pair<Queue<Node>, Double>> findPath(Node currentNode, String targetCity, Set<Node> areVisited, Queue<Node> currentPath, Double currentDistance, List<Pair<Queue<Node>, Double>> result) {
         areVisited.add(currentNode);
-        if (currentNode == targetNode) {
+        if (currentNode.getName().equals(targetCity)) {
             areVisited.remove(currentNode);
             result.add(new Pair<>(new LinkedList<>(currentPath), currentDistance));
             return result;
@@ -67,7 +58,7 @@ public class PathFinderImpl implements PathFinder {
             if (!areVisited.contains(evaluatedNeighbour)) {
                 currentPath.add(evaluatedNeighbour);
                 currentDistance += entry.getValue();
-                findPath(evaluatedNeighbour, targetNode, areVisited, currentPath, currentDistance, result);
+                findPath(evaluatedNeighbour, targetCity, areVisited, currentPath, currentDistance, result);
                 currentPath.remove(evaluatedNeighbour);
                 currentDistance -= entry.getValue();
             }
