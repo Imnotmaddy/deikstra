@@ -7,12 +7,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {H2TestConfig.class, DeikstraApplication.class})
-@ActiveProfiles("test")
+@SpringBootTest(classes = DeikstraApplication.class)
 public class ServiceTest {
 
     @Autowired

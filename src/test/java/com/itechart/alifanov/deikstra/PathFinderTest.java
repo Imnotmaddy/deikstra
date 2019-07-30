@@ -7,6 +7,7 @@ import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.Node;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.PathFinderImpl;
 import javafx.util.Pair;
 import org.junit.Before;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class PathFinderTest {
 
-    private Map<String, Map<String, Double>> outerMap = new HashMap<>();
+    private Set<Node> nodes = new HashSet<>();
 
     @MockBean
     private RouteService routeService;
@@ -58,7 +59,7 @@ public class PathFinderTest {
         routes.add(route7);
         routes.add(route8);
         routes.add(route9);
-        this.outerMap = routeService.buildMatrix(routes);
+        this.nodes = routeService.buildNodes(routes);
     }
 
     @Test
@@ -77,18 +78,20 @@ public class PathFinderTest {
     @Test
     public void testRoute_2Cities_1Connection() throws PathFinderException {
         //Given
+        Set<Node> nodes = new HashSet<>();
         RouteDto routeDto = new RouteDto("Tokyo", "Polotsk", (double) 25);
 
-        Map<String, Double> innerMap = new HashMap<>();
-        innerMap.put(routeDto.getCityB(), routeDto.getDistance());
-
-        Map<String, Map<String, Double>> outerMap = new HashMap<>();
-        outerMap.put(routeDto.getCityA(), innerMap);
+        Node nodeB = new Node(routeDto.getCityB(), null);
+        Map<Node, Double> neighbours = new HashMap<>();
+        neighbours.put(nodeB, routeDto.getDistance());
+        Node nodeA = new Node(routeDto.getCityA(), neighbours);
+        nodes.add(nodeA);
+        nodes.add(nodeB);
 
         List<String> expectedListResult = Arrays.asList(routeDto.getCityA(), routeDto.getCityB());
         Pair<List<String>, Double> expectedResult = new Pair<>(expectedListResult, routeDto.getDistance());
         //When
-        final List<Pair<List<String>, Double>> allPaths = pathFinder.findAllPaths(outerMap, routeDto.getCityA(), routeDto.getCityB());
+        final List<Pair<List<String>, Double>> allPaths = pathFinder.findAllPaths(nodes, routeDto.getCityA(), routeDto.getCityB());
         //Then
         assertThat(allPaths)
                 .containsOnly(expectedResult);
@@ -107,7 +110,7 @@ public class PathFinderTest {
         expectedList.add(expectedPair4);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Polotsk");
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(nodes, "Tokyo", "Polotsk");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
@@ -124,7 +127,7 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Moscow");
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(nodes, "Tokyo", "Moscow");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
@@ -140,7 +143,7 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Berlin");
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(nodes, "Tokyo", "Berlin");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
@@ -156,7 +159,7 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(outerMap, "Tokyo", "Minsk");
+        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(nodes, "Tokyo", "Minsk");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }

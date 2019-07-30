@@ -1,20 +1,19 @@
 package com.itechart.alifanov.deikstra.service;
 
+import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
-import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.Node;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -63,8 +62,7 @@ public class RouteService {
      */
     public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
         final List<Route> routes = this.findAllStoredRoutes();
-        final Map<String, Map<String, Double>> routeMap = buildMatrix(routes);
-        return pathFinder.findAllPaths(routeMap, fromCity, toCity);
+        return pathFinder.findAllPaths(buildNodes(routes), fromCity, toCity);
     }
 
     /**
@@ -82,21 +80,31 @@ public class RouteService {
         return existingRoute;
     }
 
-    /**
-     * @param routes list of all routes
-     * @return returns map, where key is a distinct city and value is
-     * all neighbours of the city with distance between them
-     */
-    public Map<String, Map<String, Double>> buildMatrix(List<Route> routes) {
-        HashMap<String, Map<String, Double>> map = new HashMap<>();
+    public Set<Node> buildNodes(List<Route> routes) {
+        if (routes == null || routes.isEmpty())
+            return new HashSet<>();
+
+        Map<String, Node> createdNodes = new HashMap<>();
+
         for (Route route : routes) {
             String cityA = route.getCityA();
             String cityB = route.getCityB();
-            Map<String, Double> innerMap = map.getOrDefault(cityA, new HashMap<>());
-            innerMap.put(cityB, route.getDistance());
-            map.put(cityA, innerMap);
+
+            Node currentNode = createdNodes.getOrDefault(cityA, new Node(cityA, null));
+            Node neighbour = createdNodes.getOrDefault(cityB, new Node(cityB, null));
+
+            if (currentNode.getNeighbours() == null) {
+                Map<Node, Double> neighbours = new HashMap<>();
+                neighbours.put(neighbour, route.getDistance());
+                currentNode.setNeighbours(neighbours);
+            } else {
+                currentNode.getNeighbours().put(neighbour, route.getDistance());
+            }
+            createdNodes.put(cityA, currentNode);
+            createdNodes.put(cityB, neighbour);
         }
-        return map;
+
+        return new HashSet<>(createdNodes.values());
     }
 
 }

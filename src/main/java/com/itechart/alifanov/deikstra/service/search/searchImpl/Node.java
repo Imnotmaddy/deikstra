@@ -15,12 +15,12 @@ import java.util.Map;
 @Getter
 @Setter
 @RequiredArgsConstructor
-class Node {
+public class Node {
     final private String name;
 
     private Map<Node, Double> neighbours = new HashMap<>();
 
-    Node(String name, Map<Node, Double> neighbours) {
+    public Node(String name, Map<Node, Double> neighbours) {
         this.name = name;
         this.neighbours = neighbours;
     }
