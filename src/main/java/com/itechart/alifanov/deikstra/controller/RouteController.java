@@ -3,7 +3,7 @@ package com.itechart.alifanov.deikstra.controller;
 import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
-import javafx.util.Pair;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.SearchResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +25,8 @@ public class RouteController {
 
     @PostMapping("/route/calculate")
     @ResponseBody
-    public List<Pair<List<String>, Double>> calculateRoute(@ModelAttribute RouteDto routeDto) throws PathFinderException {
-        final List<Pair<List<String>, Double>> result;
+    public List<SearchResultDto> calculateRoute(@ModelAttribute RouteDto routeDto) throws PathFinderException {
+        final List<SearchResultDto> result;
         result = routeService.calculateAllRoutes(routeDto.getCityA(), routeDto.getCityB());
         return result;
     }

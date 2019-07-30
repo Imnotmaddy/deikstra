@@ -7,13 +7,15 @@ import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.Node;
-import javafx.util.Pair;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.SearchResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.OptimisticLockException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +62,7 @@ public class RouteService {
      * list of pairs, where each pair is a route between starting point and destination represented
      * as List<String> and overall path distance as Double value;
      */
-    public List<Pair<List<String>, Double>> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
+    public List<SearchResultDto> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {
         final List<Route> routes = this.findAllStoredRoutes();
         return pathFinder.findAllPaths(getStartingNode(routes, fromCity), toCity);
     }

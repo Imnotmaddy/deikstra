@@ -1,10 +1,10 @@
 package com.itechart.alifanov.deikstra.service.search;
 
 import com.itechart.alifanov.deikstra.service.search.searchImpl.Node;
-import javafx.util.Pair;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.SearchResultDto;
 
 import java.util.List;
 
 public interface PathFinder {
-    List<Pair<List<String>, Double>> findAllPaths(Node startingNode, String toCity) throws PathFinderException;
+    List<SearchResultDto> findAllPaths(Node startingNode, String toCity) throws PathFinderException;
 }

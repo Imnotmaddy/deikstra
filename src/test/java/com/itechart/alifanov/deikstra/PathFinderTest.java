@@ -9,7 +9,7 @@ import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.Node;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.PathFinderImpl;
-import javafx.util.Pair;
+import com.itechart.alifanov.deikstra.service.search.searchImpl.SearchResultDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,9 +74,9 @@ public class PathFinderTest {
         Node nodeA = new Node(routeDto.getCityA(), neighbours);
 
         List<String> expectedListResult = Arrays.asList(routeDto.getCityA(), routeDto.getCityB());
-        Pair<List<String>, Double> expectedResult = new Pair<>(expectedListResult, routeDto.getDistance());
+        SearchResultDto expectedResult = new SearchResultDto(expectedListResult, routeDto.getDistance());
         //When
-        final List<Pair<List<String>, Double>> allPaths = pathFinder.findAllPaths(nodeA, routeDto.getCityB());
+        final List<SearchResultDto> allPaths = pathFinder.findAllPaths(nodeA, routeDto.getCityB());
         //Then
         assertThat(allPaths)
                 .containsOnly(expectedResult);
@@ -84,18 +84,18 @@ public class PathFinderTest {
 
     @Test
     public void testRouteFromTokyoToPolotsk() throws PathFinderException {
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk"), (double) 10);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk", "Polotsk"), (double) 18);
-        Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin", "Polotsk"), (double) 19);
-        Pair<List<String>, Double> expectedPair4 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk"), (double) 12);
-        List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
+        SearchResultDto expectedPair1 = new SearchResultDto(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk"), (double) 10);
+        SearchResultDto expectedPair2 = new SearchResultDto(Arrays.asList("Tokyo", "Moscow", "Minsk", "Polotsk"), (double) 18);
+        SearchResultDto expectedPair3 = new SearchResultDto(Arrays.asList("Tokyo", "Moscow", "Berlin", "Polotsk"), (double) 19);
+        SearchResultDto expectedPair4 = new SearchResultDto(Arrays.asList("Tokyo", "Berlin", "Polotsk"), (double) 12);
+        List<SearchResultDto> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
         expectedList.add(expectedPair2);
         expectedList.add(expectedPair3);
         expectedList.add(expectedPair4);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Polotsk");
+        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Polotsk");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
@@ -103,48 +103,48 @@ public class PathFinderTest {
 
     @Test
     public void testRouteFromTokyoToMoscow() throws PathFinderException {
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow"), (double) 19);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow"), (double) 3);
-        Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow"), (double) 21);
-        List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
+        SearchResultDto expectedPair1 = new SearchResultDto(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow"), (double) 19);
+        SearchResultDto expectedPair2 = new SearchResultDto(Arrays.asList("Tokyo", "Moscow"), (double) 3);
+        SearchResultDto expectedPair3 = new SearchResultDto(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow"), (double) 21);
+        List<SearchResultDto> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
         expectedList.add(expectedPair2);
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Moscow");
+        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Moscow");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
 
     @Test
     public void testRouteFromTokyoToBerlin() throws PathFinderException {
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Berlin"), (double) 25);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Berlin"), (double) 9);
-        Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin"), (double) 2);
-        List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
+        SearchResultDto expectedPair1 = new SearchResultDto(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Berlin"), (double) 25);
+        SearchResultDto expectedPair2 = new SearchResultDto(Arrays.asList("Tokyo", "Moscow", "Berlin"), (double) 9);
+        SearchResultDto expectedPair3 = new SearchResultDto(Arrays.asList("Tokyo", "Berlin"), (double) 2);
+        List<SearchResultDto> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
         expectedList.add(expectedPair2);
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Berlin");
+        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Berlin");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
 
     @Test
     public void testRouteFromTokyoToMinsk() throws PathFinderException {
-        Pair<List<String>, Double> expectedPair1 = new Pair<>(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Minsk"), (double) 26);
-        Pair<List<String>, Double> expectedPair2 = new Pair<>(Arrays.asList("Tokyo", "Moscow", "Minsk"), (double) 10);
-        Pair<List<String>, Double> expectedPair3 = new Pair<>(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow", "Minsk"), (double) 28);
-        List<Pair<List<String>, Double>> expectedList = new ArrayList<>();
+        SearchResultDto expectedPair1 = new SearchResultDto(Arrays.asList("Tokyo", "AngelTown", "BrightTown", "Polotsk", "Moscow", "Minsk"), (double) 26);
+        SearchResultDto expectedPair2 = new SearchResultDto(Arrays.asList("Tokyo", "Moscow", "Minsk"), (double) 10);
+        SearchResultDto expectedPair3 = new SearchResultDto(Arrays.asList("Tokyo", "Berlin", "Polotsk", "Moscow", "Minsk"), (double) 28);
+        List<SearchResultDto> expectedList = new ArrayList<>();
         expectedList.add(expectedPair1);
         expectedList.add(expectedPair2);
         expectedList.add(expectedPair3);
 
         //When
-        final List<Pair<List<String>, Double>> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Minsk");
+        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Minsk");
         //Then
         assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
     }
