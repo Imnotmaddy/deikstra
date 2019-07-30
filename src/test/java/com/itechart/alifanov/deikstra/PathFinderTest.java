@@ -157,8 +157,53 @@ public class PathFinderTest {
     }
 
     @Test(expected = PathFinderException.class)
-    public void whenNull_thenPathFinderException() throws PathFinderException{
+    public void whenNull_thenPathFinderException() throws PathFinderException {
         pathFinder.findAllPaths(null, "wherever");
+    }
+
+    @Test
+    public void testRouteFromTokyoToTokyo() throws PathFinderException {
+        SearchResultDto expectedResult = new SearchResultDto(Collections.singletonList("Tokyo"), (double) 0);
+        final List<SearchResultDto> allPaths = pathFinder.findAllPaths(tokyoStartingNode, "Tokyo");
+        assertThat(allPaths).containsOnly(expectedResult);
+    }
+
+    @Test
+    public void testAnotherRoute() throws PathFinderException {
+        Route route0 = new Route("A", "B", (double) 1);
+        Route route1 = new Route("B", "C", (double) 1);
+        Route route2 = new Route("C", "D", (double) 1);
+        Route route3 = new Route("D", "A", (double) 1);
+        Route route4 = new Route("A", "E", (double) 1);
+        Route route5 = new Route("B", "E", (double) 1);
+        Route route6 = new Route("C", "E", (double) 1);
+        Route route7 = new Route("D", "E", (double) 1);
+        List<Route> routes = new ArrayList<>();
+        routes.add(route0);
+        routes.add(route1);
+        routes.add(route2);
+        routes.add(route3);
+        routes.add(route4);
+        routes.add(route5);
+        routes.add(route6);
+        routes.add(route7);
+
+        Node startingNode = routeService.buildNodes(routes).getOrDefault("A", null);
+        final List<SearchResultDto> paths = pathFinder.findAllPaths(startingNode, "E");
+
+        SearchResultDto expectedPair1 = new SearchResultDto(Arrays.asList("A", "E"), (double) 1);
+        SearchResultDto expectedPair2 = new SearchResultDto(Arrays.asList("A", "B", "E"), (double) 2);
+        SearchResultDto expectedPair3 = new SearchResultDto(Arrays.asList("A", "B", "C", "E"), (double) 3);
+        SearchResultDto expectedPair4 = new SearchResultDto(Arrays.asList("A", "B", "C", "D", "E"), (double) 4);
+        List<SearchResultDto> expectedList = new ArrayList<>(4);
+        expectedList.add(expectedPair1);
+        expectedList.add(expectedPair2);
+        expectedList.add(expectedPair3);
+        expectedList.add(expectedPair4);
+
+        assertThat(paths).containsOnlyElementsOf(expectedList);
+
+
     }
 
 
