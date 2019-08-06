@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class RouteService {
+public class RouteService implements DeikstraService {
 
 
     private final RouteRepository routeRepository;
@@ -60,7 +60,7 @@ public class RouteService {
      * @param toCity   - destination city
      * @return - if path exists method returns list of objects, where each object
      * contains a route between starting point and destination represented
-     * as List<String> and overall path distance as Double value;
+     * as List of Strings and overall path distance as Double value;
      * @throws PathFinderException thrown if no paths between cities were found
      */
     public List<SearchResultDto> calculateAllRoutes(String fromCity, String toCity) throws PathFinderException {

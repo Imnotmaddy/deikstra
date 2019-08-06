@@ -17,8 +17,8 @@ public class PathFinderImpl implements PathFinder {
      * @param startingNode - entry point of the search
      * @param toCity       - destination point
      * @return - if path exists method returns list of objects, where each object
-     * * contains a route between starting point and destination represented
-     * * as List<String> and overall path distance as Double value;
+     *  contains a route between starting point and destination represented
+     *  as List of Strings and overall path distance as Double value;
      * @throws PathFinderException - thrown if no path was found
      */
     @Override
@@ -30,7 +30,7 @@ public class PathFinderImpl implements PathFinder {
         Queue<String> queue = new LinkedList<>();
         queue.add(startingNode.getName());
 
-        return findPath(startingNode, toCity, new HashSet<>(), queue, (double) 0, new LinkedList<>());
+        return findPath(startingNode, toCity, new HashSet<>(), queue, 0, new LinkedList<>());
     }
 
     /**
@@ -44,7 +44,7 @@ public class PathFinderImpl implements PathFinder {
      * * * contains a route between starting point and destination represented
      * * * as List<String> and overall path distance as Double value;
      */
-    private List<SearchResultDto> findPath(Node currentNode, String targetCity, Set<String> areVisited, Queue<String> currentPath, Double currentDistance, List<SearchResultDto> result) {
+    private List<SearchResultDto> findPath(Node currentNode, String targetCity, Set<String> areVisited, Queue<String> currentPath, double currentDistance, List<SearchResultDto> result) {
         areVisited.add(currentNode.getName());
         if (currentNode.getName().equals(targetCity)) {
             areVisited.remove(currentNode.getName());

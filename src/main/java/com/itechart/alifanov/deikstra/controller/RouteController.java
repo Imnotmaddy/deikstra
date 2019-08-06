@@ -1,7 +1,7 @@
 package com.itechart.alifanov.deikstra.controller;
 
 import com.itechart.alifanov.deikstra.dto.RouteDto;
-import com.itechart.alifanov.deikstra.service.RouteService;
+import com.itechart.alifanov.deikstra.service.DeikstraService;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
 import com.itechart.alifanov.deikstra.service.search.searchImpl.SearchResultDto;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteController {
 
-    private final RouteService routeService;
+    private final DeikstraService routeService;
 
     @PostMapping("/route")
     public void createRoute(@ModelAttribute @Valid RouteDto routeDto) throws OptimisticLockException {

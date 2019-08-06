@@ -3,6 +3,7 @@ package com.itechart.alifanov.deikstra;
 import com.itechart.alifanov.deikstra.dto.RouteDto;
 import com.itechart.alifanov.deikstra.model.Route;
 import com.itechart.alifanov.deikstra.repository.RouteRepository;
+import com.itechart.alifanov.deikstra.service.DeikstraService;
 import com.itechart.alifanov.deikstra.service.RouteService;
 import com.itechart.alifanov.deikstra.service.mapper.RouteMapper;
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
@@ -26,12 +27,12 @@ public class PathFinderTest {
     private Node tokyoStartingNode;
 
     @MockBean
-    private RouteService routeService;
+    private DeikstraService routeService;
 
     @MockBean
     private RouteRepository routeRepository;
 
-    private PathFinder pathFinder = new PathFinderImpl();
+    private final PathFinder pathFinder = new PathFinderImpl();
 
     @Before
     public void init() {
