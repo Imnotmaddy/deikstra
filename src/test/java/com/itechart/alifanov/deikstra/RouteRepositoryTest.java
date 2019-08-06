@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DeikstraApplication.class)
-public class ServiceTest {
+public class RouteRepositoryTest {
 
     @Autowired
     private RouteRepository repository;

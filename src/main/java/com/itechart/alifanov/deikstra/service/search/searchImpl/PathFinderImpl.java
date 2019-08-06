@@ -2,7 +2,7 @@ package com.itechart.alifanov.deikstra.service.search.searchImpl;
 
 import com.itechart.alifanov.deikstra.service.search.PathFinder;
 import com.itechart.alifanov.deikstra.service.search.PathFinderException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ import java.util.*;
  * This class implements algorithm for finding all paths between two
  * Nodes with breadth-first search.
  */
-@Component
+@Service
 public class PathFinderImpl implements PathFinder {
 
     /**
