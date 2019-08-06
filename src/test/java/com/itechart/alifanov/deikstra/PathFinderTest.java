@@ -114,9 +114,9 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Moscow");
+        final List<SearchResultDto> pathsToMoscow = pathFinder.findAllPaths(tokyoStartingNode, "Moscow");
         //Then
-        assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
+        assertThat(pathsToMoscow).containsOnlyElementsOf(expectedList);
     }
 
     @Test
@@ -130,9 +130,9 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Berlin");
+        final List<SearchResultDto> pathsToBerlin = pathFinder.findAllPaths(tokyoStartingNode, "Berlin");
         //Then
-        assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
+        assertThat(pathsToBerlin).containsOnlyElementsOf(expectedList);
     }
 
     @Test
@@ -146,9 +146,9 @@ public class PathFinderTest {
         expectedList.add(expectedPair3);
 
         //When
-        final List<SearchResultDto> pathsToPolotsk = pathFinder.findAllPaths(tokyoStartingNode, "Minsk");
+        final List<SearchResultDto> pathsToMinsk = pathFinder.findAllPaths(tokyoStartingNode, "Minsk");
         //Then
-        assertThat(pathsToPolotsk).containsOnlyElementsOf(expectedList);
+        assertThat(pathsToMinsk).containsOnlyElementsOf(expectedList);
     }
 
     @Test(expected = PathFinderException.class)
