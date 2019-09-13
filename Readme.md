@@ -13,3 +13,4 @@ PathFinder. Thus user is guaranteed to receive a result based on data he had at 
 6. PathFinder receives only starting city/node for search. Since node contains a tree of all nodes it can reach,
 search algorithm doesn't go through separated or secluded trees.
 7. I used Interfaces for my services to make them interchangeable if required. 
+Testing it!
